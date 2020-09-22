@@ -1,11 +1,32 @@
+******
+Update: Sept 2020
+******
+Removed compiler specific selection macros and used the library <bcm_host.h> to 
+determine key Pi Specific parameters (F_XTAL, F_PLLD_CLK, and PERI_BASE) within the code.
+Once compiled, this code should work on any Pi version.  
+  No longer requires compiling on same the Pi version as it is run.
+Removed external routine "getbaseaddr" and "pi_make.sh" 
+
+******
+Raspberry Pi LF/MF/HF/VHF WSPR transmitter with GPIO control (GPIO 7 -> 11)
+The intent of the GPIO control would be to control relays to switch in band specific Low Pass Filters
+   Modeled after QRP Labs "Ultimate relay-switched LPF kit".
+
+Add "getbaseaddr", an external routine to determine the Pi version based on base address.
+  Includes "pi_make.sh" (must be made executable) which checks for "getbaseaddr" and 
+    installs it in /usr/local/bin if not there, then runs "make" and "sudo make install"
+This application "MUST BE" compiled on the same Pi configuration as you run it.
+
+******
 Raspberry Pi bareback LF/MF/HF/VHF WSPR transmitter
+NB: This fork of the original software has been modified to run on a Pi-4B with Raspbian Buster.
 
 Makes a very simple WSPR beacon from your RasberryPi by connecting GPIO
 port to Antenna (and LPF), operates on LF, MF, HF and VHF bands from
 0 to 250 MHz.
 
-Compatible with the original Raspberry Pi, the Raspberry Pi 2/3, and
-the Pi Zero.
+Compatible with the original Raspberry Pi, Pi Zero, the Raspberry Pi 2/3, and
+the Pi 4.
 
 !!!!!!
 2017-04-21
@@ -20,26 +41,22 @@ Installation / update:
 ******
   Download and compile code:
     sudo apt-get install git
-    git clone https://github.com/JamesP6000/WsprryPi.git
+
+  Compile using supplied script:
+   chmod +x pi_make.sh
+   ./pi_make.sh    this will compile all code and install with 'sticky bit'
+                    Includes compiling getbaseaddr.cpp to verify Pi version
+
+  Or you can use the old method:
     cd WsprryPi
+    make clean                To ensure it compiles for your Pi version
     make
-
-  Install to /usr/local/bin:
     sudo make install
-
-  Uninstall:
     sudo make uninstall
 
 ******
 Usage: (WSPR --help output):
 ******
-
-  If running from the console, recent versions of Jessie cause WsprryPi to
-  crash when the console screen blanks. The symptom is that WsppryPi works
-  for several transmissions and then crashes. The fix is to add "consoleblank=0"
-  to /boot/cmdline.txt.
-  https://github.com/JamesP6000/WsprryPi/issues/10
-
   Usage:
     wspr [options] callsign locator tx_pwr_dBm f1 <f2> <f3> ...
       OR
@@ -56,8 +73,7 @@ Usage: (WSPR --help output):
     -f --free-running
       Do not use NTP to correct frequency error of RPi crystal.
     -r --repeat
-      Repeatedly, and in order, transmit on all the specified command line
-      freqs.
+      Repeatedly, and in order, transmit on all the specified command line freqs.
     -x --terminate <n>
       Terminate after n transmissions have been completed.
     -o --offset
@@ -70,6 +86,10 @@ Usage: (WSPR --help output):
     -n --no-delay
       Transmit immediately, do not wait for a WSPR TX window. Used
       for testing only.
+    -l --lpf
+      Controls GPIO pins 7 - 11 mapped as band 1 - 5 as specified as TX frequencies.
+        Can be used to switch LPF relays like the QRP-Labs board.
+        skipped TX session will reset all GPIO to OFF
 
   Frequencies can be specified either as an absolute TX carrier frequency, or
   using one of the following strings. If a string is used, the transmission
@@ -79,6 +99,9 @@ Usage: (WSPR --help output):
 
   Transmission gaps can be created by specifying a TX frequency of 0
 
+  This program supports both 4 and 6 character Maidenhead grid locators.
+    If you specify 6-characters, it will send them (older version alternated)
+    
   Note that 'callsign', 'locator', and 'tx_power_dBm' are simply used to fill
   in the appropriate fields of the WSPR message. Normally, tx_power_dBm should
   be 10, representing the signal power coming out of the Pi. Set this value
@@ -202,6 +225,9 @@ Example usage:
   The same as above, but without NTP calibration:
     sudo ./wspr --free-running N9NNN EM10 33 20m
 
+  Specify a 6 character Maidenhead grid locator with TX power 20 dBm on 20m:
+    sudo ./wspr K0WBG DM65rc 20 20m
+
   Transmit a WSPR transmission slightly off-center on 30m every 10 minutes for
   a total of 7 transmissions, and using a fixed PPM correction value.
     sudo ./wspr --repeat --terminate 7 --ppm 43.17 N9NNN EM10 33 10140210 0 0 0 0
@@ -219,6 +245,7 @@ Reference documentation:
   http://www.scribd.com/doc/101830961/GPIO-Pads-Control2
   https://github.com/mgottschlag/vctools/blob/master/vcdb/cm.yaml
   https://www.kernel.org/doc/Documentation/vm/pagemap.txt
+  https://physics.princeton.edu/pulsar/k1jt/WSPR_2.0_User.pdf (specifically Appendix B)
 
 ******
 Credits:
@@ -248,6 +275,9 @@ Credits:
   Retzler András (HA7ILM) for the massive changes that were required to
   incorporate the mailbox code so that the RPi2 and RPi3 could be supported.
 
+  Mathias Gibbens (K0WBG) added support for sending 6 character Maidenhead grid
+  locators to the program as well as performing some code cleanup.
+
   [1] PiFM code from
       http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter
   [2] Original WSPR Pi transmitter code by Dan:
@@ -256,4 +286,7 @@ Credits:
       https://github.com/threeme3/WsprryPi
   [4] This fork created by James:
       https://github.com/JamesP6000/WsprryPi
-
+  [5] This fork created by Corrie:
+      https://github.com/griffc/WsprryPi
+  [6] This fork created by Rob
+      https://github.com/kb8rco/WspryPi

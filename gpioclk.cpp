@@ -17,27 +17,28 @@ License:
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <assert.h>
+#include <bcm_host.h>
+#include <ctype.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <getopt.h>
+#include <iomanip>
+#include <iostream>
+#include <malloc.h>
+#include <math.h>
+#include <signal.h>
+#include <sstream>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <ctype.h>
-#include <dirent.h>
-#include <math.h>
-#include <fcntl.h>
-#include <assert.h>
 #include <sys/mman.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <signal.h>
-#include <malloc.h>
-#include <time.h>
 #include <sys/time.h>
-#include <getopt.h>
+#include <sys/types.h>
+#include <time.h>
+#include <unistd.h>
 #include <vector>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 
 using namespace std;
 
@@ -45,26 +46,20 @@ using namespace std;
 // Used for debugging
 #define MARK std::cout << "Currently in file: " << __FILE__ << " line: " << __LINE__ << std::endl
 
-// Nominal clock frequencies
-#define F_XTAL     (19200000.0)
-#define F_PLLD_CLK (500000000.0)
-
-// Choose proper base address depending on RPI1/RPI2 setting from makefile.
-#ifdef RPI2
-#define BCM2708_PERI_BASE 0x3f000000
-//#pragma message "Raspberry Pi 2/3 detected."
-#else
-#define BCM2708_PERI_BASE 0x20000000
-//#pragma message "Raspberry Pi 1 detected."
-#endif
-
-#define GPIO_BASE                (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
-#define PAGE_SIZE (4*1024)
-#define BLOCK_SIZE (4*1024)
-
 // This must be declared global so that it can be called by the atexit
 // function.
 volatile unsigned *allof7e = NULL;
+
+// These global variables are determined by Pi version (1, 2/3, or 4)
+// Default value is set to orignal Pi.
+volatile long unsigned PERI_BASE = 0x20000000;
+volatile double F_PLLD_CLK = 500000000.0;
+volatile double F_XTAL = 19200000.0;
+
+volatile long unsigned  GPIO_BASE = (PERI_BASE + 0x200000); 	/* GPIO controller */
+volatile int PAGE_SIZE = (4 * 1024);
+volatile int BLOCK_SIZE = (4 * 1024);
+
 
 // GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or SET_GPIO_ALT(x,y)
 #define INP_GPIO(g) *(gpio+((g)/10)) &= ~(7<<(((g)%10)*3))
@@ -347,12 +342,38 @@ void parse_commandline(
 }
 
 int main(const int argc, char * const argv[]) {
-#ifdef RPI1
-  std::cout << "Detected Raspberry Pi version 1" << std::endl;
-#else
-  std::cout << "Detected Raspberry Pi version 2/3" << std::endl;
-#endif
+  // Determine Pi version and set defaults
 
+  PERI_BASE = bcm_host_get_peripheral_address();
+
+  switch (PERI_BASE) {
+	case   0xfe000000:		// Pi4 settings
+		// PERI_BASE = 0xfe000000;
+		// Phase-Lock-Loop D frequency
+		F_PLLD_CLK = 750000000.0;
+		// Nominal clock frequencies
+		F_XTAL = 54000000.0;
+		break;
+	case 0x3f000000:		// Pi3 settings
+		// PERI_BASE = 0x3f000000;
+		// Phase-Lock-Loop D frequency
+		F_PLLD_CLK = 500000000.0;
+		// Nominal clock frequencies
+		F_XTAL = 19200000.0;
+		break;
+	case 0x20000000:		// Pi1 and PiZero versions
+		// PERI_BASE = 0x20000000;
+		// Phase-Lock-Loop D frequency
+		F_PLLD_CLK = 500000000.0;
+		// Nominal clock frequencies
+		F_XTAL = 19200000.0;
+		break;
+	default:
+		cout << "ERROR! Could not determine Pi version type" << endl;
+		ABORT(-1);
+		break;
+  }
+	
   // Parse arguments
   source_t source;
   bool freq_specified;
@@ -406,7 +427,7 @@ int main(const int argc, char * const argv[]) {
               PROT_READ|PROT_WRITE,
               MAP_SHARED,
               mem_fd,
-              BCM2708_PERI_BASE //base
+              PERI_BASE //base
           );
   if ((long int)allof7e==-1) {
     cerr << "Error: mmap error!" << endl;

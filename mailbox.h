@@ -23,6 +23,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef _MAILBOX_H
+#define _MAILBOX_H
+
 #include <linux/ioctl.h>
 
 // Newer kernels (>= 4.1) use major 249, older ones major 100.
@@ -46,3 +49,5 @@ void *unmapmem(void *addr, unsigned size);
 unsigned execute_code(int file_desc, unsigned code, unsigned r0, unsigned r1, unsigned r2, unsigned r3, unsigned r4, unsigned r5);
 unsigned execute_qpu(int file_desc, unsigned num_qpus, unsigned control, unsigned noflush, unsigned timeout);
 unsigned qpu_enable(int file_desc, unsigned enable);
+
+#endif
