@@ -58,14 +58,12 @@ extern "C" {
 // Note on accessing memory in RPi:
 //
 // There are 3 (yes three) address spaces in the Pi:
-//
 // Physical addresses
 //   These are the actual address locations of the RAM and are equivalent
 //   to offsets into /dev/mem.
 //   The peripherals (DMA engine, PWM, etc.) are located at physical
 //   address 0x2000000 for RPi1, 0xFE0000000x for the Pi4, and
 //   address 3F000000 for about everything else (RPi2 RPi3 RPi0,  and RPi0w)
-//
 // Virtual addresses
 //   These are the addresses that a program sees and can read/write to.
 //   Addresses 0x00000000 through 0xBFFFFFFF are the addresses available
@@ -76,7 +74,6 @@ extern "C" {
 //   access peripherals from virtual addresses. It is not clear to me my
 //   a user space application running as 'root' does not have access to this
 //   memory range.
-//
 // Bus addresses
 //   This is a different (virtual?) address space that also maps onto
 //   physical memory.
@@ -183,15 +180,15 @@ typedef enum { WSPR, TONE } mode_type;
 
 // Structure used to control clock generator
 struct GPCTL {
-    char SRC          : 4;
+    char SRC         : 4;
     char ENAB        : 1;
-    char KILL          : 1;
-    char                 : 1;
-    char BUSY         : 1;
-    char FLIP          : 1;
+    char KILL        : 1;
+    char             : 1;
+    char BUSY        : 1;
+    char FLIP        : 1;
     char MASH        : 2;
-    unsigned int    : 13;
-    char PASSWD    : 8;
+    unsigned int     : 13;
+    char PASSWD      : 8;
 };
 
 // Structure used to tell the DMA engine what to do
@@ -1359,7 +1356,7 @@ int main(const int argc, char *const argv[]) {
 		MEM_FLAG = 0x04;
 		break;
 	case 0x3f000000:		// Pi3 settings
-		std::cout << "   Using Pi3 Settings" << std::endl;
+		std::cout << "   Using Pi2/3 Settings" << std::endl;
 		// PERI_BASE = 0x3f000000;
 		// Phase-Lock-Loop D frequency
 		F_PLLD_CLK = 500000000.0;
@@ -1368,7 +1365,7 @@ int main(const int argc, char *const argv[]) {
 		MEM_FLAG = 0x04;
 		break;
 	case 0x20000000:		// Pi1 and PiZero versions
-		std::cout << "   Using original Pi Settings" << std::endl;
+		std::cout << "   Using original Pi (0/1) Settings" << std::endl;
 		// PERI_BASE = 0x20000000;
 		// Phase-Lock-Loop D frequency
 		F_PLLD_CLK = 500000000.0;

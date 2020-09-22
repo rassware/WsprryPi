@@ -205,7 +205,7 @@ void setup_gpios(
     // Set GPIO pins 7-11 to output
     for (g=7; g<=11; g++) {
         INP_GPIO(g); // must use INP_GPIO before we can use OUT_GPIO
-        //OUT_GPIO(g);
+        OUT_GPIO(g);
     }
 
 }
