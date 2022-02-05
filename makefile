@@ -13,10 +13,10 @@ nhash.o: nhash.c nhash.h
 	$(CC) $(CFLAGS) -c nhash.c
 
 wspr: mailbox.o nhash.o wspr.cpp mailbox.h
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -lbcm_host mailbox.o nhash.o wspr.cpp -o wspr
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -o wspr mailbox.o nhash.o wspr.cpp -lbcm_host
 
 gpioclk: gpioclk.cpp
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -lbcm_host gpioclk.cpp -o gpioclk
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -o gpioclk -lbcm_host gpioclk.cpp -lbcm_host
 
 clean:
 	$(RM) *.o gpioclk wspr
@@ -29,4 +29,3 @@ install: wspr
 .PHONY: uninstall
 uninstall:
 	$(RM) $(prefix)/bin/wspr $(prefix)/bin/gpioclk
-
