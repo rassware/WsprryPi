@@ -1,4 +1,23 @@
 ******
+Update: February 2022
+******
+Changed makefile options to properly compile on Raspberry Pi OS Bullseye
+Don't know why it was necessary, but without this change the code compiled but did not run on Bullseye
+new version:
+wspr: mailbox.o nhash.o wspr.cpp mailbox.h
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -o wspr mailbox.o nhash.o wspr.cpp -lbcm_host
+
+gpioclk: gpioclk.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -o gpioclk -lbcm_host gpioclk.cpp -lbcm_host
+
+old version:
+wspr: mailbox.o nhash.o wspr.cpp mailbox.h
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -lbcm_host mailbox.o nhash.o wspr.cpp -o wspr
+
+gpioclk: gpioclk.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -lbcm_host gpioclk.cpp -o gpioclk
+
+******
 Update: Sept 2020
 ******
 Removed compiler specific selection macros and used the library <bcm_host.h> to 
