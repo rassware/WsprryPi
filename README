@@ -17,6 +17,8 @@ wspr: mailbox.o nhash.o wspr.cpp mailbox.h
 gpioclk: gpioclk.cpp
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/vc/lib -lbcm_host gpioclk.cpp -o gpioclk
 
+Also changed 80m center frequency from 3,594,100 to 3,570,100
+
 ******
 Update: Sept 2020
 ******
