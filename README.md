@@ -22,11 +22,7 @@ PERI_BASE = 0x3f000000 // for RPi3
 PERI_BASE = 0x20000000 // for RPi1 and PiZero versions
 ```
 
----
-
 ### Update: February 2022
-
----
 
 Changed makefile options to properly compile on Raspberry Pi OS Bullseye
 Don't know why it was necessary, but without this change the code compiled but did not run on Bullseye
@@ -46,11 +42,7 @@ $(CXX) $(CXXFLAGS) $(LDFLAGS) $(LDLIBS) $(PI_VERSION) -I/opt/vc/include -L/opt/v
 
 Also changed 80m center frequency from 3,594,100 to 3,570,100
 
----
-
 ### Update: Sept 2020
-
----
 
 Removed compiler specific selection macros and used the library <bcm_host.h> to
 determine key Pi Specific parameters (F_XTAL, F_PLLD_CLK, and PERI_BASE) within the code.
@@ -84,11 +76,7 @@ the Pi 4.
 > [!CAUTION]
 > 2017-04-21 Do note that some users have been reporting lockups with recent OS versions. I have not been able to reproduce the problems on my RPI1 and RPI3 running the latest Jessie-Lite. <https://github.com/JamesP6000/WsprryPi/issues/6#issuecomment-296233932>
 
----
-
-## Installation / update:
-
----
+## Installation / Update
 
 Download and compile code:
 
@@ -107,11 +95,7 @@ For uninstall execute:
 sudo make uninstall
 ```
 
----
-
 ## Usage (WSPR --help output)
-
----
 
 ```bash
 wspr --help
@@ -125,11 +109,7 @@ in the appropriate fields of the WSPR message. Normally, tx_power_dBm should
 be 10, representing the signal power coming out of the Pi. Set this value
 appropriately if you are using an external amplifier.
 
----
-
 ## Radio licensing / RF
-
----
 
 In order to transmit legally, a HAM Radio License is REQUIRED for running
 this experiment. The output is a square wave so a low pass filter is REQUIRED.
@@ -169,11 +149,7 @@ operating into nearby antennas. Therefore it is RECOMMENDED to add some form
 of isolation, e.g. by using a RF transformer, a simple buffer/driver/PA
 stage, two schottky small signal diodes back to back.
 
----
-
 ## TX Timing
-
----
 
 This software is using system time to determine the start of WSPR
 transmissions, so keep the system time synchronised within 1sec precision,
@@ -184,11 +160,7 @@ contains a callsign, 4-digit Maidenhead square locator and transmission
 power.  Reception reports can be viewed on Weak Signal Propagation Reporter
 Network at: <http://wsprnet.org/drupal/wsprnet/spots>
 
----
-
 ## Calibration
-
----
 
 As of 2017-02, NTP calibration is enabled by default and produces a
 frequency error of about 0.1 PPM after the Pi has temperature stabilized
@@ -226,11 +198,7 @@ ppm=(F/780000-1)*1e6 In the future, specify this value as the argument to the
 set correction by specifying --test-tone 780000 --ppm <ppm> on the command
 line and confirming that the Pi is still zero beating the AM station.
 
----
-
 ## PWM Peripheral
-
----
 
 The code uses the RPi PWM peripheral to time the frequency transitions
 of the output clock. This peripheral is also used by the RPi sound system
@@ -238,11 +206,7 @@ and hence any sound events that occur during a WSPR transmission will
 interfere with WSPR transmissions. Sound can be permanently disabled
 by editing /etc/modules and commenting out the snd-bcm2835 device.
 
----
-
 ## Example usage:
-
----
 
 Brief help screen
 
@@ -286,11 +250,7 @@ Transmit repeatedly on 40m, use NTP based frequency offset calibration, and add 
 sudo wspr --repeat --offset --self-calibration N9NNN EM10 33 40m
 ```
 
----
-
 ## Reference documentation:
-
----
 
 - <http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf>
 - <http://www.scribd.com/doc/127599939/BCM2835-Audio-clocks>
@@ -299,11 +259,7 @@ sudo wspr --repeat --offset --self-calibration N9NNN EM10 33 40m
 - <https://www.kernel.org/doc/Documentation/vm/pagemap.txt>
 - <https://physics.princeton.edu/pulsar/k1jt/WSPR_2.0_User.pdf> (specifically Appendix B)
 
----
-
 ## Credits
-
----
 
 Credits goes to Oliver Mattos and Oskar Weigl who implemented PiFM [1]
 based on the idea of exploiting RPi DPLL as FM transmitter.
