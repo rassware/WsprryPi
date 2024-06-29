@@ -51,7 +51,7 @@ using namespace std;
 volatile unsigned *allof7e = NULL;
 
 // These global variables are determined by Pi version (1, 2/3, or 4)
-// Default value is set to orignal Pi.
+// Default value is set to RPi version 4.
 volatile long unsigned PERI_BASE = 0xfe000000;
 volatile double F_PLLD_CLK = 500000000.0;
 volatile double F_XTAL = 19200000.0;
