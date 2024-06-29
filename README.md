@@ -8,7 +8,7 @@ To create a QRPp transmitter out of your Raspi, you need to install some hardwar
 sudo apt-get install libraspberrypi-dev raspberrypi-kernel-headers
 ```
 
-To access the GIO pins without root access, you should be in the \`\`\`gpio\`\`\` group.
+To access the GIO pins without root access, you should be in the ```gpio``` group.
 
 ```bash
 sudo adduser $USER gpio
@@ -335,10 +335,10 @@ incorporate the mailbox code so that the RPi2 and RPi3 could be supported.
 Mathias Gibbens (K0WBG) added support for sending 6 character Maidenhead grid
 locators to the program as well as performing some code cleanup.
 
-[1] [PiFM code from](http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter)
-[2] [Original WSPR Pi transmitter code by Dan](https://github.com/DanAnkers/WsprryPi)
-[3] [Fork created by Guido](https://github.com/threeme3/WsprryPi)
-[4] [This fork created by James](https://github.com/JamesP6000/WsprryPi)
-[5] [This fork created by Corrie](https://github.com/griffc/WsprryPi)
-[6] [This fork created by Rob](https://github.com/kb8rco/WspryPi)
+ 1. [PiFM code from](http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter)
+ 2. [Original WSPR Pi transmitter code by Dan](https://github.com/DanAnkers/WsprryPi)
+ 3. [Fork created by Guido](https://github.com/threeme3/WsprryPi)
+ 4. [This fork created by James](https://github.com/JamesP6000/WsprryPi)
+ 5. [This fork created by Corrie](https://github.com/griffc/WsprryPi)
+ 6. [This fork created by Rob](https://github.com/kb8rco/WspryPi)
 
