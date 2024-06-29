@@ -52,7 +52,7 @@ volatile unsigned *allof7e = NULL;
 
 // These global variables are determined by Pi version (1, 2/3, or 4)
 // Default value is set to orignal Pi.
-volatile long unsigned PERI_BASE = 0x20000000;
+volatile long unsigned PERI_BASE = 0xfe000000;
 volatile double F_PLLD_CLK = 500000000.0;
 volatile double F_XTAL = 19200000.0;
 
@@ -347,7 +347,7 @@ int main(const int argc, char * const argv[]) {
   PERI_BASE = bcm_host_get_peripheral_address();
 
   switch (PERI_BASE) {
-	case   0xfe000000:		// Pi4 settings
+	case 0xfe000000:		// Pi4 settings
 		// PERI_BASE = 0xfe000000;
 		// Phase-Lock-Loop D frequency
 		F_PLLD_CLK = 750000000.0;
