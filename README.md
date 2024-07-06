@@ -14,14 +14,6 @@ To access the GIO pins without root access, you should be in the ```gpio``` grou
 sudo adduser $USER gpio
 ```
 
-You have to set the physical address needed for your Raspi version in the file `gpioclk.cpp`:
-
-```
-PERI_BASE = 0xfe000000 // for RPi4
-PERI_BASE = 0x3f000000 // for RPi3
-PERI_BASE = 0x20000000 // for RPi1 and PiZero versions
-```
-
 ### Update: February 2022
 
 Changed makefile options to properly compile on Raspberry Pi OS Bullseye
